@@ -1,4 +1,4 @@
-import java.io.IOException;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -9,16 +9,16 @@ public class Main {
 
     // Uncomment this block to pass the first stage
     //
-    // ServerSocket serverSocket = null;
-    // Socket clientSocket = null;
-    //
-    // try {
-    //   serverSocket = new ServerSocket(4221);
-    //   serverSocket.setReuseAddress(true);
-    //   clientSocket = serverSocket.accept(); // Wait for connection from client.
-    //   System.out.println("accepted new connection");
-    // } catch (IOException e) {
-    //   System.out.println("IOException: " + e.getMessage());
-    // }
+    ServerSocket serverSocket = null;
+    Socket clientSocket = null;
+    
+    try {
+      serverSocket = new ServerSocket(4221);
+      serverSocket.setReuseAddress(true);
+      clientSocket = serverSocket.accept(); // Wait for connection from client.
+      System.out.println("accepted new connection");
+    } catch (IOException e) {
+      System.out.println("IOException: " + e.getMessage());
+    }
   }
 }
