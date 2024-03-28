@@ -22,6 +22,9 @@ public class Main {
       BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
       String startLine = bufferedReader.readLine();
       String startLineArr[] = startLine.split(" ");
+      for(String s : startLineArr) {
+        System.out.println(s);
+      }
       if(startLineArr[1].equals("/")) {
         clientSocket.getOutputStream().write(
         "HTTP/1.1 200 OK\r\n\r\n".getBytes(StandardCharsets.UTF_8)
