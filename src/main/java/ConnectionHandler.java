@@ -23,47 +23,47 @@ public class ConnectionHandler implements Runnable {
       if (startLineArr[0].equals("GET")) {
         if (startLineArr[1].equals("/")) {
           output = "HTTP/1.1 200 OK \r\n\r\n";
-        } else if (startLineArr[1].startsWith("/echo")) {
-          String content = startLineArr[1].replace("/echo/", "");
-          output = "HTTP/1.1 200 OK \r\n"
-                   + "Content-Type: text/plain\r\n"
-                   + "Content-Length: " + content.length() + " \r\n\r\n" +
-                   content + "\r\n\r\n";
-        } else if (startLineArr[1].equals("/user-agent")) {
-          String userAgentHeader = "";
-          while ((userAgentHeader = bufferedReader.readLine()) != null) {
-            if (userAgentHeader.startsWith("User-Agent")) {
-              break;
-            }
-          }
-          assert userAgentHeader != null;
-          String[] userAgentHeaderArr = userAgentHeader.split(" ");
-          output = "HTTP/1.1 200 OK \r\n"
-                   + "Content-Type: text/plain\r\n"
-                   + "Content-Length: " + userAgentHeaderArr[1].length() +
-                   " \r\n\r\n" + userAgentHeaderArr[1] + "\r\n\r\n";
-        } else if (startLineArr[1].startsWith("/files/")) {
-          String fileName = startLineArr[1].replace("/files/", "");
-          Path path = Paths.get(DirectoryStore.getDirectory(), fileName);
-          if (Files.exists(path)) {
-            String fileContent = new String(Files.readAllBytes(path));
+        } else if (startLineArr[1].startsWith("/echo/")) {
+            String content = startLineArr[1].replace("/echo/", "");
             output = "HTTP/1.1 200 OK \r\n"
-                     + "Content-Type: application/octet-stream\r\n"
-                     + "Content-Length: " + fileContent.length() + " \r\n\r\n" +
-                     fileContent;
-          } else {
-            output = "HTTP/1.1 404 Not Found \r\n"
-                     + "Content-Length: 0 \r\n\r\n";
-          }
-        }  else {
-          output = "HTTP/1.1 404 Not Found \r\n\r\n";
-        }
-        clientSocket.getOutputStream().write(
-            (output).getBytes(StandardCharsets.UTF_8));
-      }
-    } catch (IOException e) {
-      System.out.println("IOException: " + e.getMessage());
-    }
-
-  }
-}
+                     + "Content-Type: text/plain\r\n"
+                     + "Content-Length: " + content.length() + " \r\n\r\n" +
+                     content;
+                    } else if (startLineArr[1].equals("/user-agent")) {
+                      String userAgentHeader = "";
+                      while ((userAgentHeader = bufferedReader.readLine()) != null) {
+                        if (userAgentHeader.startsWith("User-Agent")) {
+                          break;
+                        }
+                      }
+                      assert userAgentHeader != null;
+                      String[] userAgentHeaderArr = userAgentHeader.split(" ");
+                      output = "HTTP/1.1 200 OK \r\n"
+                               + "Content-Type: text/plain\r\n"
+                               + "Content-Length: " + userAgentHeaderArr[1].length() +
+                               " \r\n\r\n" + userAgentHeaderArr[1];
+                            } else if (startLineArr[1].startsWith("/files/")) {
+                              String fileName = startLineArr[1].replace("/files/", "");
+                              Path path = Paths.get(DirectoryStore.getDirectory(), fileName);
+                              if (Files.exists(path)) {
+                                String fileContent = new String(Files.readAllBytes(path));
+                                output = "HTTP/1.1 200 OK \r\n"
+                                         + "Content-Type: application/octet-stream\r\n"
+                                         + "Content-Length: " + fileContent.length() + " \r\n\r\n" +
+                                         fileContent;
+                              } else {
+                                output = "HTTP/1.1 404 Not Found \r\n"
+                                         + "Content-Length: 0 \r\n\r\n";
+                    
+                              }
+                            } else {
+                              output = "HTTP/1.1 404 Not Found \r\n\r\n";
+                            }
+                            clientSocket.getOutputStream().write(
+                                (output).getBytes(StandardCharsets.UTF_8));
+                          }
+                        } catch (IOException e) {
+                          System.out.println("IOException: " + e.getMessage());
+                        }
+                      }
+                    }
