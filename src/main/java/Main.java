@@ -25,10 +25,17 @@ public class Main {
       for(String s : startLineArr) {
         System.out.println(s);
       }
-      if(startLineArr[1].charAt(0) == '/') {
+      if(startLineArr[1].equals("/")) {
         clientSocket.getOutputStream().write(
         "HTTP/1.1 200 OK\r\n\r\n".getBytes(StandardCharsets.UTF_8)
       );
+      } else if(startLineArr[1].startsWith("/echo")) {
+        String content = startLineArr[1].replace("/echo/", "");
+        StringBuilder str = new StringBuilder();
+        str.append("HTTP/1.1 200 OK \r\n");
+        str.append("Content-Type: text/plain\r\n");
+        str.append("Content-Length: ").append(content.length()).append(" \r\n\r\n");
+        clientSocket.getOutputStream().write((str.toString()).getBytes(StandardCharsets.UTF_8));
       } else {
         clientSocket.getOutputStream().write(
           "HTTP/1.1 404 NOT FOUND \r\n\r\n".getBytes(StandardCharsets.UTF_8)
