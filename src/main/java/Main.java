@@ -18,9 +18,20 @@ public class Main {
       serverSocket.setReuseAddress(true);
       clientSocket = serverSocket.accept(); // Wait for connection from client.
       System.out.println("accepted new connection");
-      clientSocket.getOutputStream().write(
+      InputStream inputStream = clientSocket.getInputStream();
+      BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+      String startLine = bufferedReader.readLine();
+      String startLineArr[] = startLine.split(" ");
+      if(startLineArr[1] == "/") {
+        clientSocket.getOutputStream().write(
         "HTTP/1.1 200 OK\r\n\r\n".getBytes(StandardCharsets.UTF_8)
       );
+      } else {
+        clientSocket.getOutputStream().write(
+          "HTTP/1.1 404 NOT FOUND \r\n\r\n".getBytes(StandardCharsets.UTF_8)
+        );
+      }
+      
     } catch (IOException e) {
       System.out.println("IOException: " + e.getMessage());
     }
