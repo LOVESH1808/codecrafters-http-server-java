@@ -25,7 +25,7 @@ public class Main {
       for(String s : startLineArr) {
         System.out.println(s);
       }
-      if(startLineArr[1].equals("/")) {
+      if(startLineArr[1].charAt(0) == '/') {
         clientSocket.getOutputStream().write(
         "HTTP/1.1 200 OK\r\n\r\n".getBytes(StandardCharsets.UTF_8)
       );
