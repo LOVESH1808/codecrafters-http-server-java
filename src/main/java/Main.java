@@ -2,46 +2,39 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-
 public class Main {
   public static void main(String[] args) {
-    // You can use print statements as follows for debugging, they'll be visible when running tests.
-    System.out.println("Logs from your program will appear here!");
-
-    // Uncomment this block to pass the first stage
-    //
     ServerSocket serverSocket = null;
     Socket clientSocket = null;
-    
     try {
       serverSocket = new ServerSocket(4221);
       serverSocket.setReuseAddress(true);
       clientSocket = serverSocket.accept(); // Wait for connection from client.
       System.out.println("accepted new connection");
       InputStream inputStream = clientSocket.getInputStream();
-      BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+      BufferedReader bufferedReader =
+          new BufferedReader(new InputStreamReader(inputStream));
       String startLine = bufferedReader.readLine();
-      String startLineArr[] = startLine.split(" ");
-      for(String s : startLineArr) {
-        System.out.println(s);
-      }
-      if(startLineArr[1].equals("/")) {
+      String[] startLineArr = startLine.split(" ");
+      if (startLineArr[1].equals("/")) {
         clientSocket.getOutputStream().write(
-        "HTTP/1.1 200 OK\r\n\r\n".getBytes(StandardCharsets.UTF_8)
-      );
-      } else if(startLineArr[1].startsWith("/echo")) {
+            ("HTTP/1.1 200 OK \r\n\r\n").getBytes(StandardCharsets.UTF_8));
+      } else if (startLineArr[1].startsWith("/echo")) {
         String content = startLineArr[1].replace("/echo/", "");
-        StringBuilder str = new StringBuilder();
-        str.append("HTTP/1.1 200 OK \r\n");
-        str.append("Content-Type: text/plain\r\n");
-        str.append("Content-Length: ").append(content.length()).append(" \r\n\r\n");
-        clientSocket.getOutputStream().write((str.toString()).getBytes(StandardCharsets.UTF_8));
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("HTTP/1.1 200 OK \r\n");
+        stringBuilder.append("Content-Type: text/plain\r\n");
+        stringBuilder.append("Content-Length: ")
+            .append(content.length())
+            .append(" \r\n\r\n");
+        stringBuilder.append(content).append("\r\n\r\n");
+        clientSocket.getOutputStream().write(
+            (stringBuilder.toString()).getBytes(StandardCharsets.UTF_8));
       } else {
         clientSocket.getOutputStream().write(
-          "HTTP/1.1 404 NOT FOUND \r\n\r\n".getBytes(StandardCharsets.UTF_8)
-        );
+            ("HTTP/1.1 404 Not Found \r\n\r\n")
+                .getBytes(StandardCharsets.UTF_8));
       }
-      
     } catch (IOException e) {
       System.out.println("IOException: " + e.getMessage());
     }
