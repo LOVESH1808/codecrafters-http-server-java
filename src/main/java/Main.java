@@ -43,6 +43,7 @@ public class Main {
                responseHandler.handle404(finalSocket);
 
              finalSocket.close();
+             
            } catch (IOException e) {
              System.out.println("IOException: " + e.getMessage());
            }
