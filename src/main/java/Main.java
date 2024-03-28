@@ -37,11 +37,15 @@ public class Main {
         } else if (startLineArr[1].equals("/user-agent")) {
           String userAgentHeader = "";
           while ((userAgentHeader = bufferedReader.readLine()) != null) {
+            System.out.println("while"+ "  "+ userAgentHeader);
             if (userAgentHeader.startsWith("User-Agent")) {
               break;
             }
           }
           String[] userAgentHeaderArr = userAgentHeader.split(" ");
+          for(String s : userAgentHeaderArr) {
+            System.out.println(s);
+          }
           StringBuilder stringBuilder = new StringBuilder();
           stringBuilder.append("HTTP/1.1 200 OK \r\n");
           stringBuilder.append("Content-Type: text/plain\r\n");
