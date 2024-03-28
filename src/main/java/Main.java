@@ -51,7 +51,7 @@ public class Main {
           stringBuilder.append("Content-Type: text/plain\r\n");
           stringBuilder.append("Content-Length: ")
               .append(userAgentHeaderArr[1].length())
-              .append(" \r\n\r\n");
+              .append(" \r\n");
           stringBuilder.append(userAgentHeaderArr[1]).append("\r\n\r\n");
           clientSocket.getOutputStream().write(
               (stringBuilder.toString()).getBytes(StandardCharsets.UTF_8));
