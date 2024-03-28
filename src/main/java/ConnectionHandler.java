@@ -4,8 +4,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 public class ConnectionHandler implements Runnable {
-  Socket clientSocket;
+  private Socket clientSocket;
   public ConnectionHandler(Socket clientSocket) {
     this.clientSocket = clientSocket;
   }
@@ -39,7 +42,20 @@ public class ConnectionHandler implements Runnable {
                    + "Content-Type: text/plain\r\n"
                    + "Content-Length: " + userAgentHeaderArr[1].length() +
                    " \r\n\r\n" + userAgentHeaderArr[1] + "\r\n\r\n";
-        } else {
+        } else if (startLineArr[1].startsWith("/files/")) {
+          String fileName = startLineArr[1].replace("/files/", "");
+          Path path = Paths.get(DirectoryStore.getDirectory(), fileName);
+          if (Files.exists(path)) {
+            String fileContent = new String(Files.readAllBytes(path));
+            output = "HTTP/1.1 200 OK \r\n"
+                     + "Content-Type: application/octet-stream\r\n"
+                     + "Content-Length: " + fileContent.length() + " \r\n\r\n" +
+                     fileContent;
+          } else {
+            output = "HTTP/1.1 404 Not Found \r\n"
+                     + "Content-Length: 0 \r\n\r\n";
+          }
+        }  else {
           output = "HTTP/1.1 404 Not Found \r\n\r\n";
         }
         clientSocket.getOutputStream().write(
